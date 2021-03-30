@@ -4,4 +4,4 @@
 <h3>Ignews is a application developed in Ignite second module</h3>
 
 <h4>Techs:</h4>
-<p>React    Next.js   SASS    CSS modules</p>
+<p>React;    Next.js;   SASS;    CSS modules;</p>
