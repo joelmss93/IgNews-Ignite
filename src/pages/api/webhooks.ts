@@ -1,16 +1,14 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from 'next';
 import { Readable } from 'stream';
-import Stripe from "stripe";
-import { stripe } from "../../services/stripe";
-import { saveSubscription } from "./_lib/manageSubscription";
+import Stripe from 'stripe';
+import { stripe } from '../../services/stripe';
+import { saveSubscription } from './_lib/manageSubscription';
 
 async function buffer(readable: Readable) {
   const chunks = [];
 
   for await (const chunk of readable) {
-    chunks.push(
-      typeof chunk === 'string' ? Buffer.from(chunk) : chunk
-    );
+    chunks.push(typeof chunk === 'string' ? Buffer.from(chunk) : chunk);
   }
 
   return Buffer.concat(chunks);
@@ -19,8 +17,8 @@ async function buffer(readable: Readable) {
 export const config = {
   api: {
     bodyParser: false,
-  }
-}
+  },
+};
 
 const relevantEvents = new Set([
   'checkout.session.completed',
@@ -62,7 +60,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
             break;
           case 'checkout.session.completed':
-            const checkoutSession = event.data.object as Stripe.Checkout.Session;
+            const checkoutSession = event.data
+              .object as Stripe.Checkout.Session;
 
             await saveSubscription(
               checkoutSession.subscription.toString(),
@@ -77,7 +76,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       } catch (err) {
         return res.json({ error: 'Webhook handler failed' });
       }
-
     }
 
     res.json({ received: true });
@@ -85,5 +83,4 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.setHeader('Allow', 'POST');
     res.status(405).end('Method not allowed');
   }
-
-}
+};
